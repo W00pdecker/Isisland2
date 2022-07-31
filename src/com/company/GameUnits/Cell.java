@@ -9,15 +9,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Cell {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int plantAmount;
     public CopyOnWriteArrayList<Animal> wolves = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Animal> rabbits = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Animal> deers = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Animal> sheeps = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Animal> foxes = new CopyOnWriteArrayList<>();
-    public HashMap<String, CopyOnWriteArrayList<Animal>> residents = new HashMap<>(){{
+    public final HashMap<String, CopyOnWriteArrayList<Animal>> RESIDENTS = new HashMap<>(){{
         put("Wolf", wolves);
         put("Rabbit", rabbits);
         put("Deer", deers);
@@ -30,29 +30,30 @@ public class Cell {
         this.x = x;
         this.y = y;
         plantGrow();
-
     }
 
-    public void populate() {
-        Random r = new Random();
-        if (r.nextInt(10) == 1) {
+    public void populate() {  //creating Animals on a cell
+        Random r = new Random(); // every animal has it own spawn chance on a cell
+        if (r.nextInt(20) == 1) {
             AnimalFactory.create("Wolf", x, y);
         }
-        AnimalFactory.create("Rabbit", x, y);
-        if (r.nextInt(10) <= 2) {
+        if (r.nextInt(10) <= 7) {
+            AnimalFactory.create("Rabbit", x, y);
+        }
+        if (r.nextInt(10) <= 4) {
             AnimalFactory.create("Deer", x, y);
         }
         if (r.nextInt(10) <= 5) {
             AnimalFactory.create("Sheep", x, y);
         }
-        if (r.nextInt(10) == 2) {
+        if (r.nextInt(10) <= 4) {
             AnimalFactory.create("Fox", x, y);
         }
 
     }
 
     public void plantGrow() {
-        plantAmount += ThreadLocalRandom.current().nextInt(200);
+        plantAmount += ThreadLocalRandom.current().nextInt(100);
     }
 
     public int getX() {

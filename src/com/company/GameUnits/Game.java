@@ -10,16 +10,16 @@ import java.util.concurrent.*;
 public class Game extends  Thread {
     public static Island island;
     private static Statistics stat;
-    private int days = 0;
+    private static int days = 0;
     private List<Animal> animals;
 
 
 
-    public Game(Island island) {
+    public Game(Island island) {   // creating island and gathering all threads in List<animal>.
 
         this.island = island;
         this.animals = Arrays.stream(island.cells).flatMap(x -> Arrays.stream(x)).
-                flatMap(x -> x.residents.values().stream()).
+                flatMap(x -> x.RESIDENTS.values().stream()).
                 flatMap(x -> x.stream()).toList();
 
     }
@@ -32,30 +32,24 @@ public class Game extends  Thread {
         stat = new Statistics();
         List<Cell> cells = Arrays.stream(island.cells).flatMap(x -> Arrays.stream(x)).toList();
         ScheduledExecutorService mainPool = Executors.newScheduledThreadPool(4);
-        List<Animal> workers = animals;
         mainPool.scheduleWithFixedDelay(() -> {
+            animals = Arrays.stream(island.cells).flatMap(x -> Arrays.stream(x)).
+                    flatMap(x -> x.RESIDENTS.values().stream()).
+                    flatMap(x -> x.stream()).toList(); //collecting new animals to list
             System.out.println("day start");
             ExecutorService servicePool;
             servicePool = Executors.newFixedThreadPool(20);
-            workers.forEach(servicePool::submit);
+            animals.forEach(servicePool::submit);
             servicePool.shutdown();
-            cells.forEach(Cell::plantGrow);
-            showStatistics();
+            cells.forEach(Cell::plantGrow); // at the end of a turn growing some new plants
+            stat.showStatistics();
             if (++days > 10) {
                 mainPool.shutdownNow();
             }
         },1000, 1000, TimeUnit.MILLISECONDS);
     }
 
-    public void showStatistics() {
-        System.out.println("started statistics");
-        System.out.println("Days: " + days);
-        System.out.println("    Animals on map: " + stat.countAll());
-        System.out.println("    Wolfs: " + stat.countWolves() +
-                "   Rabbits: " + stat.countRabbits() +
-                "   Deers: " + stat.countDeers() +
-                "   Sheeps: " + stat.countSheeps() +
-                "   Foxes: " + stat.countFoxes());
-        System.out.println(    "Plants: " + stat.countPlants());
+    public static int getDays() {
+        return days;
     }
 }

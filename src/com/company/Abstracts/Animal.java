@@ -16,11 +16,9 @@ public abstract class Animal implements Runnable{
     public int maxAmount;
     public int speed;
     public String className;
-    public int reproduceRate;
-    public static AtomicInteger actualAmount;
     private int x;   //координаты животного
     private int y;
-    public boolean isMated;
+    public boolean isMated; //флаг "женился/не женился"
     public boolean isDead; // флаг "мертвый/живой"
     public double satiety;
     public int starvingCount = 0;
@@ -41,9 +39,9 @@ public abstract class Animal implements Runnable{
     public abstract void eat();
 
     public void reproduce() {
-        synchronized (Game.island.cells[x][y].residents) {
-            for (Animal animal : Game.island.cells[x][y].residents.get(className)) {
-                if (!animal.isMated && Game.island.cells[x][y].residents.get(className).size() < maxAmount) {
+        synchronized (Game.island.cells[x][y].RESIDENTS) {
+            for (Animal animal : Game.island.cells[x][y].RESIDENTS.get(className)) {
+                if (!animal.isMated && Game.island.cells[x][y].RESIDENTS.get(className).size() < maxAmount) {
                     animal.isMated = true;
                     isMated = true;
                     AnimalFactory.create(className, x, y);

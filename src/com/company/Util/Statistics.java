@@ -8,9 +8,18 @@ import java.util.List;
 
 public class Statistics {
 
-    private List<Cell> cells = Arrays.stream(Game.island.cells).flatMap(x -> Arrays.stream(x)).toList();
+    private final List<Cell> cells = Arrays.stream(Game.island.cells).flatMap(x -> Arrays.stream(x)).toList();
 
-    public Statistics() {
+    public void showStatistics() {
+        System.out.println("started statistics");
+        System.out.println("Days: " + Game.getDays());
+        System.out.println("    Animals on map: " + countAll());
+        System.out.println("    Wolfs: " + countWolves() +
+                "   Rabbits: " + countRabbits() +
+                "   Deers: " + countDeers() +
+                "   Sheeps: " + countSheeps() +
+                "   Foxes: " + countFoxes());
+        System.out.println(    "Plants: " + countPlants());
     }
 
     public long countAll() {
