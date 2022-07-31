@@ -21,9 +21,9 @@ public abstract class Carnivore extends Animal {
     }
 
     public boolean hunt() { // выбираем из всех животных, находящихся на клетке, тех, кто входит в список съедобных.
-        List<Animal> food = Game.island.cells[getX()][getY()].residents.keySet().stream(). // берем поток типов животных находящихся на клетке
+        List<Animal> food = Game.island.cells[getX()][getY()].RESIDENTS.keySet().stream(). // берем поток типов животных находящихся на клетке
                 filter(className -> prey.keySet().contains(className)). // отсеиваем те типы, которые есть в списке prey
-                flatMap(className -> Game.island.cells[getX()][getY()].residents.get(className).stream()). // меняем поток типов на поток зверей
+                flatMap(className -> Game.island.cells[getX()][getY()].RESIDENTS.get(className).stream()). // меняем поток типов на поток зверей
                 sorted((a1, a2) -> (int) (a2.weight - a1.weight)). //сортируем их по весу
                 collect(Collectors.toList());
 
